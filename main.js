@@ -23,7 +23,8 @@ exec("node slowService.js");
 function memoryLoad()
 {
 	// console.log( os.totalmem(), os.freemem() );
-	return 0;
+	return (os.totalmem() - os.freemem())/ os.totalmem() * 100
+	// return 0;
 }
 
 // Create function to get CPU information
@@ -62,7 +63,8 @@ function cpuAverage()
 	var totalDifference = endMeasure.total - startMeasure.total;
  
 	//Calculate the average percentage CPU usage
-	return 0;
+	// return 0;
+	return (totalDifference - idleDifference) / totalDifference * 100
 }
 
 function measureLatenancy(server)
@@ -72,10 +74,12 @@ function measureLatenancy(server)
 		url: server.url
 	};
 	console.log("request to url");
+	var start = Date.now();
 	request(options, function (error, res, body) 
 	{
 		console.log( error || res.statusCode, server.url);
-		server.latency = 500;
+		server.latency = Date.now() - start;
+
 	});
 	return server.latency;
 }
